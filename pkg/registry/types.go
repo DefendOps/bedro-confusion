@@ -14,8 +14,7 @@ type RegistryModule interface {
 	Name() string             							// Name of the module
 	Registry() Registry									// Registry type (e.g., NPM, PyPI)
 	SourceAdapter(source.Source) (interface{}, error)	// SourceAdapter to convert the source into something readable by the module
-	Scan(interface{}) error								// Perform scanning for dependencies
-	CreatePackage() error								// Create a package dynamically
+	CreatePackage(args map[string]interface{}) error	// Create a package dynamically
 }
 
 type RegistryModuleID struct {

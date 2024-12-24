@@ -9,7 +9,7 @@ import (
 
 func ScanSources(sources []utilsSource.Source, scan_config Config, ctx *context.Context){
 	for _, modules := range registry.RegistryModules{
-		for _, module := range modules{
+		for _, module := range modules {
 			for _, source := range sources{
 				if module.GonnaBeExecuted(string(source.Registry)){
 					module.Run(source, ctx)
