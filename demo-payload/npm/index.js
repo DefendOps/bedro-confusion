@@ -1,0 +1,1 @@
+console.log("Malicious code executed!");

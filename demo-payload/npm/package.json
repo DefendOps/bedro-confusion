@@ -1,0 +1,11 @@
+{
+    "name": "<% _original_package_name %>",
+    "version": "<% _inc_new_version %>",
+    "description": "<% _original_description %>",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"
+    },
+    "author": "<% _author_name %>",
+    "license": "ISC"
+  }
