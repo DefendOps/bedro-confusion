@@ -6,7 +6,10 @@ import (
 	"os"
 
 	"github.com/defendops/bedro-confuser/pkg/cmd/root"
+	"github.com/defendops/bedro-confuser/pkg/database"
+	"github.com/defendops/bedro-confuser/pkg/global"
 	"github.com/defendops/bedro-confuser/pkg/utils"
+	"github.com/joho/godotenv"
 )
 
 type exitCode int
@@ -25,9 +28,20 @@ func main() {
 }
 
 func mainCLI() exitCode {
+	err := godotenv.Load("./.bedro-confuser")
+	if err != nil {
+		global.DBConnected = false
+	}
 	ctx := context.Background()
 	
 	utils.PrintBanner()
+
+	if err := database.InitDB(); err != nil {
+		global.DBConnected = false
+	}else{
+		global.DBConnected = true
+		database.MigrateModels()
+	}
 	
 	rootCmd, err := root.NewCmdRoot()
 	if err != nil {
@@ -48,6 +62,12 @@ func mainCLI() exitCode {
 	rootCmd.SetArgs(expandedArgs)
 
 	if _, err := rootCmd.ExecuteContextC(ctx); err != nil {
+	}
+
+	connection, err := database.GetDB().DB()
+	if err != nil{
+	}else{
+		defer connection.Close()
 	}
 	
 	return exitOK

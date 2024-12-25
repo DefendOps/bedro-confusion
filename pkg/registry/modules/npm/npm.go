@@ -9,19 +9,24 @@ import (
 	"strings"
 
 	"github.com/defendops/bedro-confuser/pkg/registry"
+	"github.com/defendops/bedro-confuser/pkg/registry/payloads"
 	"github.com/defendops/bedro-confuser/pkg/utils/requester"
 	"github.com/defendops/bedro-confuser/pkg/utils/source"
 	"github.com/defendops/bedro-confuser/pkg/utils/types"
 )
 
 type RegistryModule struct {
+	GithubAPI *payloads.GithubAPI
 	channel chan string
 }
 
 func init() {
+	GithubAPI := payloads.NewGithubAPI()
 	npmModule := RegistryModule{
+		GithubAPI: GithubAPI,
 		channel: make(chan string),
 	}
+
 	registry.RegisterRegistryModule(&npmModule)
 }
 
@@ -308,9 +313,14 @@ func (n *RegistryModule) SourceAdapter(src source.Source) (interface{}, error) {
 
 func (n *RegistryModule) CreatePackage(args map[string]interface{}) error {
 	package_name := args["packageName"].(string)
-	n.channel<-package_name
 
 	fmt.Printf("Creating NPM package for %s\n", package_name)
-	
+
+	payloadFiles := n.GithubAPI.GetPayloadFiles(payloads.DemoPayload)
+	for _, file := range payloadFiles{
+		fmt.Println(file.Path)
+	}
+
+	n.channel<-package_name
 	return nil
 }
