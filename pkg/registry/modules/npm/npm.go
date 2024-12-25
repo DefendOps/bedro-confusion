@@ -11,6 +11,7 @@ import (
 	"github.com/defendops/bedro-confuser/pkg/registry"
 	"github.com/defendops/bedro-confuser/pkg/utils/requester"
 	"github.com/defendops/bedro-confuser/pkg/utils/source"
+	"github.com/defendops/bedro-confuser/pkg/utils/types"
 )
 
 type RegistryModule struct {
@@ -24,7 +25,7 @@ func init() {
 	registry.RegisterRegistryModule(&npmModule)
 }
 
-func (n *RegistryModule) Run(src source.Source, ctx *context.Context) error {
+func (n *RegistryModule) Run(src source.Source, scan_config types.Config, ctx *context.Context) error {
 	// AdaptedSource is expected to be interface{} type
 	// 
 	// @PackageNameSource Scenarios
@@ -77,7 +78,7 @@ func (n *RegistryModule) Run(src source.Source, ctx *context.Context) error {
 			}
 
 			for dep, depInfo := range packageContent.Dependencies{
-				if !depInfo.Exists{
+				if !depInfo.Exists && scan_config.CreatePackages{
 					go func(dep string){
 						args = map[string]interface{}{
 							"packageName": dep,
@@ -129,7 +130,7 @@ func (n *RegistryModule) Run(src source.Source, ctx *context.Context) error {
 						Registry: src.Registry,
 					}
 
-					n.Run(tempSrc, ctx)
+					n.Run(tempSrc, scan_config, ctx)
 					n.channel<-pkg
 				}(pkg)
 				

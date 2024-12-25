@@ -7,6 +7,7 @@ import (
 	"github.com/defendops/bedro-confuser/pkg/utils"
 	"github.com/defendops/bedro-confuser/pkg/utils/scan"
 	"github.com/defendops/bedro-confuser/pkg/utils/source"
+	"github.com/defendops/bedro-confuser/pkg/utils/types"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,7 @@ var (
 )
 
 func NewCmdRun() *cobra.Command {
-	var config scan.CliConfig;
+	var config types.CliConfig;
 
 	cmd := &cobra.Command{
 		Use:   "url",

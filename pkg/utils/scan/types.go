@@ -1,22 +1,14 @@
 package scan
 
-import "time"
+import (
+	"time"
 
-type Config struct {
-	DefaultTimeout time.Duration
-	CreatePackages bool
-	Monitoring 	bool
-}
+	"github.com/defendops/bedro-confuser/pkg/utils/types"
+)
 
-type CliConfig struct {
-	Timeout int16
-	Takeover bool
-}
-
-func CreateScanConfig(config CliConfig) Config {
-	return Config{
+func CreateScanConfig(config types.CliConfig) types.Config {
+	return types.Config{
 		DefaultTimeout: time.Duration(config.Timeout) * time.Millisecond,
 		CreatePackages: config.Takeover,
-		Monitoring: false,
 	}
 }
