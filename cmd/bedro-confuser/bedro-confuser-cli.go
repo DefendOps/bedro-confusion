@@ -28,7 +28,7 @@ func main() {
 }
 
 func mainCLI() exitCode {
-	err := godotenv.Load("./.bedro-confuser")
+	err := godotenv.Load(".bedro-confuser")
 	if err != nil {
 		global.DBConnected = false
 	}

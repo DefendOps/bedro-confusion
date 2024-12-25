@@ -9,7 +9,9 @@ import (
 	"strings"
 
 	"github.com/defendops/bedro-confuser/pkg/registry"
+	"github.com/defendops/bedro-confuser/pkg/registry/accounts"
 	"github.com/defendops/bedro-confuser/pkg/registry/payloads"
+	"github.com/defendops/bedro-confuser/pkg/utils"
 	"github.com/defendops/bedro-confuser/pkg/utils/requester"
 	"github.com/defendops/bedro-confuser/pkg/utils/source"
 	"github.com/defendops/bedro-confuser/pkg/utils/types"
@@ -70,12 +72,11 @@ func (n *RegistryModule) Run(src source.Source, scan_config types.Config, ctx *c
 				}
 			}
 
-			if !isVulnerable{
-				fmt.Printf("[i] %s Package was found\n", src.RawValue)
-			}else{
-				fmt.Printf("[i] %s Package was not found\n", src.RawValue)
-				
-			}
+			// if !isVulnerable{
+			// 	fmt.Printf("[i] %s Package was found\n", src.RawValue)
+			// }else{
+			// 	fmt.Printf("[i] %s Package was not found\n", src.RawValue)
+			// }
 
 			packageContent.Dependencies[src.RawValue] = RegistryPackageDependencyInfo{
 				Exists: !isVulnerable,
@@ -121,7 +122,7 @@ func (n *RegistryModule) Run(src source.Source, scan_config types.Config, ctx *c
 			}
 
 			for pkg := range notFoundPkgs{
-				if !Contains(packages_to_takeover, pkg){
+				if !utils.Contains(packages_to_takeover, pkg){
 					packages_to_takeover = append(packages_to_takeover, pkg)
 				}
 			}
@@ -234,7 +235,7 @@ func (n *RegistryModule) SourceAdapter(src source.Source) (interface{}, error) {
 						}
 					}
 
-					if !Contains(formattedResponse.NPMUsers, pkgValue.NPMUser.Email){
+					if !utils.Contains(formattedResponse.NPMUsers, pkgValue.NPMUser.Email){
 						formattedResponse.NPMUsers = append(formattedResponse.NPMUsers, pkgValue.NPMUser.Email)
 					}
 				}
@@ -316,10 +317,10 @@ func (n *RegistryModule) CreatePackage(args map[string]interface{}) error {
 
 	fmt.Printf("Creating NPM package for %s\n", package_name)
 
-	payloadFiles := n.GithubAPI.GetPayloadFiles(payloads.DemoPayload)
-	for _, file := range payloadFiles{
-		fmt.Println(file.Path)
-	}
+	// payloadFiles := n.GithubAPI.GetPayloadFiles(payloads.DemoPayload)
+	am := accounts.NewAccountManager()
+	account := am.GetAccount(string(source.NPM))
+	fmt.Println(account)
 
 	n.channel<-package_name
 	return nil

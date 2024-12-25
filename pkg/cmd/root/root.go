@@ -1,6 +1,7 @@
 package root
 
 import (
+	"github.com/defendops/bedro-confuser/pkg/cmd/accounts"
 	"github.com/defendops/bedro-confuser/pkg/cmd/scan"
 
 	"github.com/spf13/cobra"
@@ -16,6 +17,7 @@ func NewCmdRoot() (*cobra.Command, error){
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 
 	rootCmd.AddCommand(scan.NewCmdConfig())
+	rootCmd.AddCommand(accounts.NewCmdConfig())
 
 	return rootCmd, nil
 }
